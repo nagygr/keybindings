@@ -55,9 +55,28 @@ func main() {
 		log.Fatalf("Error processing config file: %s", err.Error())
 	}
 
-	var choice int
+	var (
+		choice int
+		argNum = len(os.Args)
+	)
 
-	choice, err = getChoiceFromTerminal(&config)
+	if argNum == 1 {
+		choice, err = getChoiceFromTerminal(&config)
+	} else if argNum == 2 {
+		if os.Args[1] == "-h" || os.Args[1] == "--help" {
+			fmt.Printf(
+				"\n%s [application name]\n\n"+
+					"Lists the keybindings of the application name given as an argument.\n"+
+					"Configs can be found at: %s\n\n",
+				os.Args[0], configPath,
+			)
+			os.Exit(0)
+		}
+
+		choice, err = getChoiceFromCommandLine(&config)
+	} else {
+		err = fmt.Errorf("Zero or one command line expected, got %d", argNum)
+	}
 
 	if err != nil {
 		log.Fatal(err.Error())
@@ -212,4 +231,16 @@ func getChoiceFromTerminal(config *Config) (choice int, err error) {
 	}
 
 	return
+}
+
+func getChoiceFromCommandLine(config *Config) (choice int, err error) {
+	appName := os.Args[1]
+
+	for i, appConf := range config.Applications {
+		if appConf.Name == appName {
+			return i, nil
+		}
+	}
+
+	return 0, fmt.Errorf("Unrecognized application name: %s", appName)
 }

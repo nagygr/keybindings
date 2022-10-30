@@ -33,6 +33,19 @@ applications:
       keybindingpattern: nnoremap ([a-zA-Z0-9<>,]+) (.*)
 ```
 
+There are two operating modes:
+
+1.	**Interactive**:
+	-	when no command-line arguments are supplied to the application, it
+		starts in interactive mode
+	-	it lists the application that have been configured and the user gets to
+		choose one
+	-	it then lists the keybindings of the chosen application
+2.	**Autonomous**:
+	-	the application can take exactly one command argument which can either
+		be "-h" or "--help" or the name of an application
+	-	it prints a help message or the keybindings of the application
+
 ## Compilation
 
 The application needs to be compiled. For this, a working Go build environment
