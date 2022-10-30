@@ -55,36 +55,12 @@ func main() {
 		log.Fatalf("Error processing config file: %s", err.Error())
 	}
 
-	fmt.Printf("\nChoose application:\n\n")
-	for i, app := range config.Applications {
-		fmt.Printf("(%d)  %s\n", i, app.Name)
-	}
+	var choice int
 
-	var (
-		inputOK = false
-		choice  int
-	)
+	choice, err = getChoiceFromTerminal(&config)
 
-	for !inputOK {
-		fmt.Printf("\nChoice: ")
-
-		reader := bufio.NewReader(os.Stdin)
-		input, err := reader.ReadString('\n')
-		if err != nil {
-			log.Fatalf("An error occured while reading input: %s", err.Error())
-		}
-
-		choice, err = strconv.Atoi(strings.TrimSuffix(input, "\n"))
-		if err != nil {
-			fmt.Printf("\nInvalid input: %s\n", err.Error())
-		} else {
-			inputOK = true
-		}
-
-		if inputOK && (choice < 0 || choice >= len(config.Applications)) {
-			fmt.Printf("Choice should be between 0 and %d\n", len(config.Applications)-1)
-			inputOK = false
-		}
+	if err != nil {
+		log.Fatal(err.Error())
 	}
 
 	userHomeDir, err := os.UserHomeDir()
@@ -203,4 +179,37 @@ func configurationDirectory() (string, error) {
 
 func configurationPath(configDir string) string {
 	return filepath.Join(configDir, "config.yml")
+}
+
+func getChoiceFromTerminal(config *Config) (choice int, err error) {
+	fmt.Printf("\nChoose application:\n\n")
+	for i, app := range config.Applications {
+		fmt.Printf("(%d)  %s\n", i, app.Name)
+	}
+
+	var inputOK = false
+
+	for !inputOK {
+		fmt.Printf("\nChoice: ")
+
+		reader := bufio.NewReader(os.Stdin)
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			return 0, fmt.Errorf("An error occured while reading input: %s", err.Error())
+		}
+
+		choice, err = strconv.Atoi(strings.TrimSuffix(input, "\n"))
+		if err != nil {
+			fmt.Printf("\nInvalid input: %s\n", err.Error())
+		} else {
+			inputOK = true
+		}
+
+		if inputOK && (choice < 0 || choice >= len(config.Applications)) {
+			fmt.Printf("Choice should be between 0 and %d\n", len(config.Applications)-1)
+			inputOK = false
+		}
+	}
+
+	return
 }
