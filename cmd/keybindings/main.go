@@ -149,7 +149,7 @@ func defaultConfig() Config {
 			{
 				Name:              "vim",
 				Path:              ".vimrc",
-				KeybindingPattern: "(?:map|nmap|nnoremap|tnoremap) ((?:[a-zA-Z0-9<>]|\\\\p{Punct})+) (.*)",
+				KeybindingPattern: "(?:map|nmap|nnoremap|tnoremap) ((?:[a-zA-Z0-9<>-]|\\\\p{Punct})+) (.*)",
 			},
 			{
 				Name:              "vifm",
@@ -190,7 +190,7 @@ func ensureConfig() error {
 func configurationDirectory() (string, error) {
 	userHomeDir, err := os.UserHomeDir()
 	if err != nil {
-		return "", fmt.Errorf("Couldn't retrieve user driectory: %w", err)
+		return "", fmt.Errorf("Couldn't retrieve user directory: %w", err)
 	}
 
 	return filepath.Join(userHomeDir, ".config", "keybindings"), nil

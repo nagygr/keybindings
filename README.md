@@ -27,7 +27,7 @@ applications:
       keybindingpattern: bindsym ([a-zA-Z0-9$+]+) (.*)
     - name: vim
       path: .vimrc
-      keybindingpattern: (?:map|nmap|nnoremap|tnoremap) ((?:[a-zA-Z0-9<>]|\\p{Punct})+) (.*)
+      keybindingpattern: (?:map|nmap|nnoremap|tnoremap) ((?:[a-zA-Z0-9<>-]|\\p{Punct})+) (.*)
     - name: vifm
       path: .config/vifm/vifmrc
       keybindingpattern: nnoremap ([a-zA-Z0-9<>,]+) (.*)
